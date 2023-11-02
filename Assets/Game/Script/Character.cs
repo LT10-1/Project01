@@ -9,13 +9,15 @@ public class Character : MonoBehaviour
     private Vector3 _movementVelocity;
     private PlayerInput _playerInput;
     private float _verticalVelocity;
-    private float Gravity = -9.8f;
+    public float Gravity = -9.8f;
     private Quaternion _targetRotation;
+    private Animator _animator;
 
     private void Awake()
     {
         _cc = GetComponent<CharacterController>();
         _playerInput = GetComponent<PlayerInput>();
+        _animator = GetComponent<Animator>();  
     }
 
     private void CalculatePlayerMovement()
@@ -23,12 +25,17 @@ public class Character : MonoBehaviour
         _movementVelocity.Set(_playerInput.HorizontalInput, 0f, _playerInput.VerticalInput);
         _movementVelocity.Normalize();
         _movementVelocity = Quaternion.Euler(0, -45f, 0) * _movementVelocity;
+        _animator.SetFloat("Speed", _movementVelocity.magnitude);
         _movementVelocity *= MoveSpeed * Time.deltaTime;
+
+        
 
         if (_movementVelocity != Vector3.zero)
         {
             _targetRotation = Quaternion.LookRotation(_movementVelocity);
             transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.deltaTime * 10f);
+
+            _animator.SetBool("AirBorne", !_cc.isGrounded);
         }
     }
 
