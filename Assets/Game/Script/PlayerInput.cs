@@ -7,11 +7,18 @@ public class PlayerInput : MonoBehaviour
     public float HorizontalInput;
 
     public float VerticalInput;
+    public bool MouseButtonDown;
 
     
     // Update is called once per frame
     void Update()
     {
+        if(!MouseButtonDown && Time.timeScale != 0)
+        {
+            MouseButtonDown = Input.GetMouseButtonDown(0);
+        }
+
+
         HorizontalInput = Input.GetAxisRaw("Horizontal");
         VerticalInput = Input.GetAxisRaw("Vertical");
 
@@ -19,6 +26,7 @@ public class PlayerInput : MonoBehaviour
 
     private void OnDisable()
     {
+        MouseButtonDown = false;
         HorizontalInput = 0;
         VerticalInput = 0;
     }
